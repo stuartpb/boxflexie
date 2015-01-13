@@ -423,11 +423,11 @@ var Flexie = (function (win, doc) {
 					value = trim(prop.value);
 
 					if (property) {
-						shortProp = property.replace("box-", EMPTY_STRING);
+						shortProp = property.replace("-moz-box-", EMPTY_STRING);
 
 						switch (shortProp) {
 						case "display" :
-							if (value === "box") {
+							if (value === "-moz-box") {
 								addRules(selector, rule, NULL, NULL);
 							}
 							break;
@@ -571,11 +571,11 @@ var Flexie = (function (win, doc) {
 				value = trim(prop.value);
 				
 				if (property) {
-					shortProp = property.replace("box-", EMPTY_STRING);
+					shortProp = property.replace("-moz-box-", EMPTY_STRING);
 					
 					switch (shortProp) {
 					case "display" :
-						if (value === "box") {
+						if (value === "-moz-box") {
 							display = value;
 						}
 						break;
@@ -700,7 +700,7 @@ var Flexie = (function (win, doc) {
 				flex = FLEX_BOXES[key];
 
 				// One final check to ensure each flexbox has a display property
-				if (flex.display === "box") {
+				if (flex.display === "-moz-box") {
 					// Constructor
 					box = new FLX.box(flex);
 				}
@@ -1974,9 +1974,9 @@ var Flexie = (function (win, doc) {
 		dummy.style.width = dummy.style.height = height + "px";
 		dummy.innerHTML = (child + child + child);
 
-		appendProperty(dummy, "display", "box", NULL);
-		appendProperty(dummy, "box-align", "stretch", TRUE);
-		appendProperty(dummy, "box-pack", "justify", TRUE);
+		appendProperty(dummy, "display", "-moz-box", NULL);
+		appendProperty(dummy, "-moz-box-align", "stretch", TRUE);
+		appendProperty(dummy, "-moz-box-pack", "justify", TRUE);
 
 		doc.body.appendChild(dummy);
 		childHeight = dummy.firstChild.offsetHeight;
@@ -2013,7 +2013,7 @@ var Flexie = (function (win, doc) {
 		}
 		
 		doc.body.removeChild(dummy);
-		return ~ (dummy.style.display).indexOf("box") ? partialSupportGrid : FALSE;
+		return ~ (dummy.style.display).indexOf("-moz-box") ? partialSupportGrid : FALSE;
 	};
 	
 	FLX.init = function () {
