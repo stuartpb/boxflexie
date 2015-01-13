@@ -1,41 +1,30 @@
-### Flexie enables the 2009 Flexbox model. You're probably looking for the updated spec. There is currently no polyfill for the new spec.*
+# mozboxie
 
-__* I've been [working on one](http://github.com/doctyper/reflexie) in my off-time. It's a beast.__
+mozboxie is a polyfill, based on [Flexie](https://github.com/doctyper/flexie), that polyfills Firefox 3-19's implementation of the 2009 Flexbox model for IE 6 through 9. ([Opera 10 to 12.1 and *really* old versions of Firefox, Safari, or Chrome](http://caniuse.com/#feat=flexbox) might get polyfilled, too, but why bother to check?)
 
+It uses a browser-prefixed version of this *older* version of the spec as the basis for the polyfill, because a polyfill for that older version already existed. A [polyfill for the new spec](https://github.com/doctyper/reflexie) never materialized, as browsers without support for *any* version of Flexbox had all but died out by the time the new spec was finalized, and for these older browsers, it's easier to "polyfill" the newer standard by just using Autoprefixer to convert the new syntax to browser-prefixed versions of the older ones.
 
-Cross-browser support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css3-flexbox/). Check out [The Playground](http://flexiejs.com/playground/) to see it in action.
-# Flexie v1.0.3 [![](http://stillmaintained.com/doctyper/flexie.png)](http://stillmaintained.com/doctyper/flexie)
+Unfortunately, that still leaves IE 6, 7, and 8 (the Windows XP-era IEs), and IE 9 (the last IE with Windows Vista support) stranded with no polyfill. Now, granted, if you're running something that can't upgrade past IE 8 or 9, your machine is probably going to have bad enough performance without a polyfill. However, maybe you just need *one last page* to load, so you can install a better browser, and the designers of that page want to write their page with one canonical Flexbox layout.
 
-## Browser Support
-* IE 6-9
-* Opera 10.0+
+You, hypothetical IE 9 user, will just have to put up with a few more minutes of render time.
 
-The Flexible Box Model is [supported natively](http://www.caniuse.com/#feat=flexbox) by these browsers:
+### Polyfilled properties
 
-* Firefox 3.0+
-* Safari 3.2+
-* Chrome 5.0+
-
-In addition, Flexie attempts to normailze browser inconsistencies with the flexible box model.
-
-### Currently Supported Properties
-* box-orient
-* box-align
-* box-direction
-* box-pack
-* box-flex
-* box-flex-group
-* box-ordinal-group
-
-## Why?
-I *really* wanted to use the CSS3 Flexible Box Model.
+* -moz-box-orient
+* -moz-box-align
+* -moz-box-direction
+* -moz-box-pack
+* -moz-box-flex
+* -moz-box-flex-group
+* -moz-box-ordinal-group
 
 ## How?
-It works like [Selectivizr](http://selectivizr.com). In fact, it uses Selectivizr's engine to traverse your style sheets and looks for `display: box` elements. After that, it looks for any of the currently supported properties.
 
-Note: Flexie looks for non-vendor-prefixed properties. For example, it will ignore `-moz-box-pack`, but not `box-pack`. For best results, make sure to use a non-vendor-prefixed property _in addition to_ your prefixed properties. But you were already doing that to future-proof your code, weren't you?
+***This is untested and may or may not work.*** [File an issue](https://github.com/stuartpb/mozboxie/issues/new) if you give it a shot and find out one way or the other.
 
-No setup on your end, just stick Flexie in your markup after your [selector engine of choice](http://selectivizr.com/#things).
+It works like [Selectivizr](http://selectivizr.com). In fact, it uses Selectivizr's engine to traverse your style sheets and looks for `display: -moz-box` elements. After that, it looks for any of the polyfilled properties.
+
+No setup on your end, just stick mozboxie in your markup after your [selector engine of choice](http://selectivizr.com/#things).
 
 ## Requirements
 See the [things you need to know](http://selectivizr.com/#things)
@@ -43,15 +32,11 @@ See the [things you need to know](http://selectivizr.com/#things)
 ## Caveats
 * For older browsers (IE < 8), please remember that some advanced selectors (child, adjacent, pseudo-selectors) will fail. Flexie does not attempt to bridge this gap, so if you must support legacy browsers, class names and ID selectors are your best bets.
 
-* As of FF 4.0 / Chrome 7 / Safari 5, Gecko and Webkit differ slightly in their flexbox implementations. <strike>Of note is their default values. Webkit will default to `box-align: start`, while Gecko defaults to the spec-defined `box-align: stretch`. Make sure your flexbox CSS works on both these browsers before adding Flexie.</strike>
-	* As of version 0.7, Flexie normalizes the `box-align` property across Webkit browsers.
-	* As of version 0.8, Flexie normalizes the `box-pack` property in Gecko.
-
 * Be careful of pseudo-selectors (i.e., `:nth-child`, `:first-child`). While native flexbox does not modify the DOM, Flexie must. Thus, your CSS properties might not apply as intended. For example, if you use a combination of `box-direction: reverse` and a `:first-child` selector, that selector will target the wrong element. And if you followed all of that, congratulations.
 
 * There may be cases where the floats used to mimic the flexbox layout drop in Internet Explorer browsers. If possible, you can try the [overflow fix](http://css-tricks.com/all-about-floats/) to snap these into place _(Flexie assumes it cannot use this as a workaround due to the impact this may have in your layouts)_.
 
-* As of YUI 2.8.2r1, YUI's selector engine does not recognize dashed attributes (i.e. [data-name="foo"]). Flexie uses several [data- attributes](http://ejohn.org/blog/html-5-data-attributes/) as element flags. A bug report [has been filed](http://yuilibrary.com/projects/yui2/ticket/2529254) about this issue, but in the meantime YUI remains incompatible with Flexie.
+* As of YUI 2.8.2r1, YUI's selector engine does not recognize dashed attributes (i.e. [data-name="foo"]). Flexie uses several [data- attributes](http://ejohn.org/blog/html-5-data-attributes/) as element flags. A bug report [has been filed](http://yuilibrary.com/projects/yui2/ticket/2529254) about this issue, but in the meantime YUI remains incompatible with Flexie. *(Apparently YUI 3 has since come out, which may or may not fix this, or even be compatible at all.)*
 
 ## Asynchronous API
 You can run Flexie asynchronously in case you cannot purely on style sheets. All parameters are optional, unless otherwise stated:
@@ -139,9 +124,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ## Contact
-* rich {at} doctyper {dot} com
-* [@doctyper](http://twitter.com/doctyper) on Twitter
-* <http://doctyper.com>
+- Original Flexie author:
+  * rich {at} doctyper {dot} com
+  * [@doctyper](http://twitter.com/doctyper) on Twitter
+  * <http://doctyper.com>
+- guy who tweaked it into mozboxie:
+  * stuart@testtrack4.com
+  * @stuartpb on GitHub and [Twitter](http://twitter.com/stuartpb)
+  * <https://stuartpb.com>
 
 ## Links
 * Flexie on GitHub: <http://github.com/doctyper/flexie>
